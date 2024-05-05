@@ -42,12 +42,16 @@
                     class="shadow appearance-none rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="username" style="float:left;" type="file" placeholder="Username" required accept=".zip" />
 
-                <button
+
+
+
+                <button wire:loading.attr="disabled" wire:target="save, zip"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     style="float:left;" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed"
                     wire:loading.class.remove="hover:bg-blue-700">
-                    <span wire:loading wire:target="save">Please Wait...</span>
-                    <span wire:loading.remove>Upload</span>
+                    <span wire:loading wire:target="save">Processing Zip..</span>
+                   <span wire:loading.remove wire:target="save, zip">Upload</span>
+                     <span wire:loading wire:target="zip">Uploading...</span>
                 </button>
 
 
