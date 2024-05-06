@@ -17,7 +17,7 @@ use File;
 class FormTable extends Component
 {
 
-    protected $validExtensions = ['bmp', 'jpg', 'jpeg', 'png', 'gif'];
+    // protected $validExtensions = ['bmp', 'jpg', 'jpeg', 'png', 'gif'];
 
     use WithFileUploads;
     use LivewireAlert;
@@ -78,7 +78,14 @@ class FormTable extends Component
             if ($folderName !== $currentFolder) {
                 $currentFolder = $folderName;
                 $currentRow = new ZipsData();
-                $currentRow->name = explode("/", $folderName)[1];
+                // dd($folderName);
+
+                try {
+                    $currentRow->name = explode("/", $folderName)[1];
+                } catch (\Throwable $th) {
+                    $currentRow->name = explode("/", $folderName)[0];
+                }
+
                 $currentRow->folder_id = $randomDirectoryName;
                 $currentRow->user_id = auth()->id(); // Assuming you have authentication and want to associate the data with the logged-in user
                 $currentRow->img_1 = null;
@@ -93,7 +100,8 @@ class FormTable extends Component
 
             $entry = 'extracted_files/' . $randomDirectoryName . '/' . $entry;
 
-            if (Str::endsWith($fileName, '.bmp')) {
+
+            if (pathinfo($fileName, PATHINFO_EXTENSION)) {
                 if (!$currentRow->img_1) {
                     $currentRow->img_1 = $entry;
                 } elseif (!$currentRow->img_2) {
@@ -106,6 +114,7 @@ class FormTable extends Component
                     $currentRow->img_5 = $entry;
                 }
             }
+
 
             $currentRow->save();
         }

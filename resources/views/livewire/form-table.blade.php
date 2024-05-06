@@ -22,9 +22,11 @@
     </style> --}}
 
     <style>
-        .fingerprint_label{
+        .fingerprint_label {
             text-align: center;
+            display: none;
         }
+
         /* img{
             margin-left: 12% !important;
         } */
@@ -50,8 +52,8 @@
                     style="float:left;" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed"
                     wire:loading.class.remove="hover:bg-blue-700">
                     <span wire:loading wire:target="save">Processing Zip..</span>
-                   <span wire:loading.remove wire:target="save, zip">Upload</span>
-                     <span wire:loading wire:target="zip">Uploading...</span>
+                    <span wire:loading.remove wire:target="save, zip">Upload</span>
+                    <span wire:loading wire:target="zip">Uploading...</span>
                 </button>
 
 
@@ -94,111 +96,120 @@
             </button>
         </div>
 
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 light:text-gray-400 printTable"
-            style="text-align:center;" id="myTable">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 light:bg-gray-700 light:text-gray-400 visible">
-                <tr class="visible">
-                    <th scope="col" class="px-6 py-3 visible ">
-                        Candidate Name
-                    </th>
-                    <th scope="col" class="px-6 py-3 visible">
-                        Marksheet
-                    </th>
-                    <th scope="col" class="px-6 py-3 visible">
-                        Certificate
-                    </th>
-                    <th scope="col" class="px-6 py-3 visible">
-                        Skill Card
-                    </th>
+        <div style=" break-inside: avoid;">
 
-                    <th scope="col" class="px-6 py-3 visible">
-                        Others
-                    </th>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 light:text-gray-400 printTable"
+                style="text-align:center;" id="myTable">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 light:bg-gray-700 light:text-gray-400 visible">
+                    <tr class="visible">
+                        <th scope="col" class="px-6 py-3 visible ">
+                            Candidate Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 visible">
+                            Marksheet
+                        </th>
+                        <th scope="col" class="px-6 py-3 visible">
+                            Certificate
+                        </th>
+                        <th scope="col" class="px-6 py-3 visible">
+                            Skill Card
+                        </th>
 
-                    <th scope="col" class="px-6 py-3 visible" style="display:none;">
-                        Others
-                    </th>
-                    <th scope="col" class="px-6 py-3 visible hide">
-                        Manage Brightness
-                    </th>
-                    <th scope="col" class="px-6 py-3 visible hide">
-                        Manage Contrast
-                    </th>
+                        <th scope="col" class="px-6 py-3 visible">
+                            Others
+                        </th>
 
-                    <th scope="col" class="px-6 py-3 visible hide">
-                        Forced High Quality
-                    </th>
+                        <th scope="col" class="px-6 py-3 visible">
+                            Others
+                        </th>
 
-                </tr>
-            </thead>
-            <tbody id="table_export">
+                        <th scope="col" class="px-6 py-3 visible hide">
+                            Manage Brightness
+                        </th>
+                        <th scope="col" class="px-6 py-3 visible hide">
+                            Manage Contrast
+                        </th>
 
+                        <th scope="col" class="px-6 py-3 visible hide">
+                            Sharpen
+                        </th>
 
-
-                @if (@$data !== null)
-                    @foreach ($data as $d)
-                        @php
-                            $parts = explode('(', $d->name);
-                            $name = isset($parts[0]) ? $parts[0] : '';
-                            $number = isset($parts[1]) ? '(' . $parts[1] : '';
-                        @endphp
-
-                        <tr class="bg-white border-b light:bg-gray-800 light:border-gray-700 visible" id="">
-                            <td class="user_name">{{ $name }}<br>{{ $number }}</td>
-                            <td align="center">
-                                <img src="{{ asset('storage/' . $d->img_1) }}" id="marksheetImage_{{ $d->id }}"
-                                    style="height:20vh; margin:10px; " alt="Image Not Found">
-                                <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
-                            </td>
-
-                            <td align="center">
-                                <img src="{{ asset('storage/' . $d->img_2) }}" style="height:20vh; margin:10px;"
-                                    alt="Image Not Found">
-                                <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
-                            </td>
-
-
-                            <td align="center">
-                                <img src="{{ asset('storage/' . $d->img_3) }}" style="height:20vh; margin:10px;"
-                                    alt="Image Not Found">
-                                <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
-                            </td>
-
-                            <td align="center">
-                                <img src="{{ asset('storage/' . $d->img_4) }}" style="height:20vh; margin:10px;"
-                                    alt="Image Not Found">
-                                <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
-                            </td>
-
-                            {{-- <td style="width:30px;">
-                                <img src="{{ asset('storage/' . $d->img_5) }}" style="height:20vh; display:none; margin:10px;" class="last_img"
-                                    alt="Image Not Found">
-                                <span class="fingerprint_label" style="text-align: center;">{{ $name }}<br>{{ $number }}</span>
-                            </td> --}}
-
-                            <td id="brightnessRange">
-                                <input type="range" name="" min="0" value="100" max="200"
-                                    id="" class="brightness-slider">
-                            </td>
-
-                            <td id="contrastRange">
-                                <input type="range" name="" min="0" value="100" max="200"
-                                    id="" class="contrast-slider">
-                            </td>
-
-                            <td id="high-quality-checkbox hide">
-                                <input type="checkbox" id="" class="high-quality-checkbox hide">
-                            </td>
-
-                        </tr>
-                    @endforeach
-                @endif
+                    </tr>
+                </thead>
+                <tbody id="table_export">
 
 
 
+                    @if (@$data !== null)
+                        @foreach ($data as $d)
+                            @php
+                                $parts = explode('(', $d->name);
+                                $name = isset($parts[0]) ? $parts[0] : '';
+                                $number = isset($parts[1]) ? '(' . $parts[1] : '';
+                            @endphp
 
-            </tbody>
-        </table>
+                            <tr class="bg-white border-b light:bg-gray-800 light:border-gray-700 visible"
+                                id="">
+                                <td class="user_name">{{ $name }}<br>{{ $number }}</td>
+                                <td align="center">
+                                    <img src="{{ asset('storage/' . $d->img_1) }}"
+                                        id="marksheetImage_{{ $d->id }}" style="height:20vh; margin:10px; "
+                                        alt="Image Not Found">
+                                    <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
+                                </td>
+
+                                <td align="center">
+                                    <img src="{{ asset('storage/' . $d->img_2) }}" style="height:20vh; margin:10px;"
+                                        alt="Image Not Found">
+                                    <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
+                                </td>
+
+
+                                <td align="center">
+                                    <img src="{{ asset('storage/' . $d->img_3) }}" style="height:20vh; margin:10px;"
+                                        alt="Image Not Found">
+                                    <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
+                                </td>
+
+                                <td align="center">
+                                    <img src="{{ asset('storage/' . $d->img_4) }}" style="height:20vh; margin:10px;"
+                                        alt="Image Not Found">
+                                    <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
+                                </td>
+
+                                <td align="center">
+                                    <img src="{{ asset('storage/' . $d->img_5) }}" style="height:20vh; margin:10px;"
+                                        class="last_img" alt="Image Not Found">
+                                    <span class="fingerprint_label"
+                                        style="text-align: center;">{{ $name }}<br>{{ $number }}</span>
+                                </td>
+
+                                <td id="brightnessRange">
+                                    <input type="range" name="" min="0" value="100" max="1000"
+                                        id="" class="brightness-slider">
+                                </td>
+
+                                <td id="contrastRange">
+                                    <input type="range" name="" min="0" value="100"
+                                        max="1000" id="" class="contrast-slider">
+                                </td>
+
+                                <td id="high-quality-checkbox hide">
+                                    <input type="checkbox" id="" class="high-quality-checkbox hide">
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    @endif
+
+
+
+
+                </tbody>
+            </table>
+
+        </div>
+
     </div>
 
 
@@ -212,9 +223,9 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     {{-- <script type="text/javascript" src="{{ asset('js/html2canvas.js') }}"></script> --}}
 
-     <style>
-         /* table tr{ background: rgb(245,245,245) !important ;  } */
-     </style>
+    <style>
+        /* table tr{ background: rgb(245,245,245) !important ;  } */
+    </style>
 
     <script>
         // Event listener for #exportPdf button
@@ -222,7 +233,6 @@
             // Apply the print style that hides certain elements
             var style = document.createElement('style');
             style.textContent = `
-        .fingerprint_label { display: none; }
         @media print {
             img { height: 10vh !important; height:auto; width:80% !important; margin:0px !important; margin-top:5px !important;   margin-bottom: 5px !important; clip-path: polygon(5% 6%, 95% 5%, 95% 95%, 6% 95%); }
             table { width: 100% !important; border:1px #e5e7eb black !important  }
@@ -247,19 +257,24 @@
             // Apply the print style that shows certain elements
             var style = document.createElement('style');
             style.textContent = `
-        .fingerprint_label { display: none; }
         @media print {
             table{ background-color: rgba(0,0,0,0.5) !important ;  }
             img { height: 10vh !important; border:none !important;  clip-path: polygon(5% 6%, 95% 5%, 95% 95%, 6% 95%); }
             table { width: 100% !important; margin-top:-35px;  background: rgb(245,245,245) !important ; }
-            table tr{ border:none !important }
-            table tr td{ border:none !important; }
+            table tr{ border:none !important;  }
+            table tr td span{ border:none !important; margin:10px; }
             table tr td img{ border:none !important }
             // .last_img{margin-left:30px !important;}
             #brightnessRange, #contrastRange, .hide { display: none !important; } .fingerprint_label {  display: block !important; } th  { display: none !important; }
             .user_name  { display: none !important; }
             .shadow-sm{ box-shadow: none !important; }
+
+            table {page-break-before: always;}
+        tr{page-break-inside: avoid;
+           page-break-after: auto;}
+
         }
+
     `;
             document.head.appendChild(style);
 
