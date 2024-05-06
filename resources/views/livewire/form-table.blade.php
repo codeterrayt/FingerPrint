@@ -30,9 +30,18 @@
         /* img{
             margin-left: 12% !important;
         } */
+
+        svg {
+            display: none;
+        }
     </style>
 
 
+    <svg>
+        <filter id="sharpen">
+            <feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="-1 0 0 0 3 0 0 0 -1" />
+        </filter>
+    </svg>
 
     <div class="relative overflow-x-auto hide" id="upload_section">
         <form class="bg-white rounded px-8 pt-6 pb-8 mb-4" wire:submit="save">
@@ -134,6 +143,10 @@
                             Sharpen
                         </th>
 
+                        <th scope="col" class="px-6 py-3 visible hide">
+                            Forced Sharpen
+                        </th>
+
                     </tr>
                 </thead>
                 <tbody id="table_export">
@@ -155,11 +168,12 @@
                                     <img src="{{ asset('storage/' . $d->img_1) }}"
                                         id="marksheetImage_{{ $d->id }}" style="height:20vh; margin:10px; "
                                         alt="Image Not Found">
+
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
 
                                 <td align="center">
-                                    <img src="{{ asset('storage/' . $d->img_2) }}" style="height:20vh; margin:10px;"
+                                    <img src="{{ asset('storage/' . $d->img_2) }}" style="height:20vh; margin:10px; "
                                         alt="Image Not Found">
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
@@ -185,13 +199,18 @@
                                 </td>
 
                                 <td id="brightnessRange">
-                                    <input type="range" name="" min="0" value="100" max="1000"
-                                        id="" class="brightness-slider">
+                                    <input type="range" name="" min="0" value="100"
+                                        max="1000" id="" class="brightness-slider">
                                 </td>
 
                                 <td id="contrastRange">
                                     <input type="range" name="" min="0" value="100"
                                         max="1000" id="" class="contrast-slider">
+                                </td>
+
+                                <td id="sharpenRange ">
+                                    <input type="range" name="" min="2" value="2"
+                                        max="6" id="" class="sharpen-slider hide">
                                 </td>
 
                                 <td id="high-quality-checkbox hide">
@@ -361,6 +380,80 @@
             }
         }
 
+        function adjustSharpen(targetId, sharpenValue) {
+
+
+            if (sharpenValue == 2) {
+
+                var childs = $(targetId).parent().parent().children();
+                for (let i = 1; i <= 5; i++) {
+                    let image = $(childs[i]).children()[0];
+                    let currentFilter = image.style.filter;
+                    if (currentFilter.includes("url(")) {
+                        image.style.filter = currentFilter.replace(/url\(.*?\)/, "");
+                    }
+
+
+                }
+                return;
+            } else if (sharpenValue == 3) {
+                sharpenValue = 6
+            } else if (sharpenValue == 4) {
+                sharpenValue = 5
+            } else if (sharpenValue == 5) {
+                sharpenValue = 4
+            }else if (sharpenValue == 6) {
+                sharpenValue = 3
+            }
+            console.log(sharpenValue)
+
+            // Create or get existing SVG filter element
+            var svg = document.querySelector('svg'); // Assuming there's only one SVG element in the document
+            var filterId = 'sharpen-' + sharpenValue;
+            var filter = document.getElementById(filterId);
+            var feConvolveMatrixElement;
+
+
+
+            // If the filter doesn't exist, create it
+            if (!filter) {
+                filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+                filter.setAttribute('id', filterId);
+
+                feConvolveMatrixElement = document.createElementNS('http://www.w3.org/2000/svg', 'feConvolveMatrix');
+                feConvolveMatrixElement.setAttribute('order', '3');
+                feConvolveMatrixElement.setAttribute('preserveAlpha', 'true');
+
+                filter.appendChild(feConvolveMatrixElement);
+                svg.appendChild(filter);
+            } else {
+                feConvolveMatrixElement = filter.querySelector('feConvolveMatrix');
+            }
+
+            // Set the kernelMatrix attribute based on the sharpenValue
+            if (feConvolveMatrixElement) {
+                var kernelMatrix = `-1 0 0 0 ${sharpenValue} 0 0 0 -1`;
+                feConvolveMatrixElement.setAttribute('kernelMatrix', kernelMatrix);
+            }
+
+            // Apply the filter to the target elements
+            var childs = $(targetId).parent().parent().children();
+            for (let i = 1; i <= 5; i++) {
+                let image = $(childs[i]).children()[0];
+                // image.style.filter = `url(#${filterId})`;
+                let currentFilter = image.style.filter;
+                if (currentFilter.includes("url(")) {
+                    let newFilter = currentFilter.replace(/url\(.*?\)/, `url(#${filterId})`);
+                    image.style.filter = newFilter;
+                } else {
+                    // If the filter property doesn't contain url, append the new filter
+                    image.style.filter += ` url(#${filterId})`;
+                }
+            }
+        }
+
+
+
 
         document.addEventListener('DOMContentLoaded', function() {
             document.body.addEventListener('input', function(event) {
@@ -377,6 +470,10 @@
                     var targetId = slider.dataset.target;
                     var value = slider.value;
                     toggleHighQuality(slider, value);
+                } else if (slider.classList.contains('sharpen-slider')) {
+                    var targetId = slider.dataset.target;
+                    var value = slider.value;
+                    adjustSharpen(slider, value);
                 }
             });
         });
