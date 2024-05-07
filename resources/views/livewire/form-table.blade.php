@@ -27,9 +27,10 @@
             display: none;
         }
 
-        /* img{
-            margin-left: 12% !important;
-        } */
+        img {
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+        }
 
         svg {
             display: none;
@@ -402,7 +403,7 @@
                 sharpenValue = 5
             } else if (sharpenValue == 5) {
                 sharpenValue = 4
-            }else if (sharpenValue == 6) {
+            } else if (sharpenValue == 6) {
                 sharpenValue = 3
             }
             console.log(sharpenValue)
