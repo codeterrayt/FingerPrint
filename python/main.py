@@ -59,8 +59,8 @@ def process_file(file_path):
 
     # Enhance the fingerprint image
     out = fingerprint_enhancer.enhance_Fingerprint(img)
-    out = fingerprint_enhancer.enhance_Fingerprint(out)
-    out = fingerprint_enhancer.enhance_Fingerprint(out)
+    # out = fingerprint_enhancer.enhance_Fingerprint(out)
+    # out = fingerprint_enhancer.enhance_Fingerprint(out)
 
     # Invert the output
     inverted_out = 255 - out
