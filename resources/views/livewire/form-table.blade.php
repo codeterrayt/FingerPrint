@@ -86,6 +86,25 @@
     <div>
 
 
+        @if (@$latest_job != null)
+            <div class="flex items-center p-4 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600"
+                role="alert">
+                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>
+                <span class="sr-only">Info</span>
+                <div>
+                    <span class="font-medium">{{ $latest_job->status }}</span>
+                </div>
+            </div>
+        @endif
+
+
+
+
+
         <div class="hide py-6 mb-20 mx-8">
             <button
                 class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hide"
@@ -168,33 +187,34 @@
                                 <td align="center">
                                     <img src="{{ asset('storage/' . $d->img_1) }}"
                                         id="marksheetImage_{{ $d->id }}" style="height:20vh; margin:10px; "
-                                        alt="Image Not Found">
+                                        alt="">
 
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
 
                                 <td align="center">
                                     <img src="{{ asset('storage/' . $d->img_2) }}" style="height:20vh; margin:10px; "
-                                        alt="Image Not Found">
+                                        alt="">
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
 
 
+
                                 <td align="center">
                                     <img src="{{ asset('storage/' . $d->img_3) }}" style="height:20vh; margin:10px;"
-                                        alt="Image Not Found">
+                                        alt="">
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
 
                                 <td align="center">
                                     <img src="{{ asset('storage/' . $d->img_4) }}" style="height:20vh; margin:10px;"
-                                        alt="Image Not Found">
+                                        alt="">
                                     <span class="fingerprint_label">{{ $name }}<br>{{ $number }}</span>
                                 </td>
 
                                 <td align="center">
                                     <img src="{{ asset('storage/' . $d->img_5) }}" style="height:20vh; margin:10px;"
-                                        class="last_img" alt="Image Not Found">
+                                        class="last_img" alt="">
                                     <span class="fingerprint_label"
                                         style="text-align: center;">{{ $name }}<br>{{ $number }}</span>
                                 </td>

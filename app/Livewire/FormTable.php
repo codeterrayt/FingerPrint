@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Jobs\ProcessFingerprint;
+use App\Models\UserJob;
 use App\Models\ZipsData;
 use Livewire\Component;
 
@@ -11,6 +13,9 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Str;
 use Illuminate\Support\Facades\Storage;
 use File;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Queue;
 
 // use Illuminate\Support\Facades\Storage;
 
@@ -27,6 +32,8 @@ class FormTable extends Component
 
     public $data;
 
+    public $latest_job = null;
+
     public function mount()
     {
         $this->fetch();
@@ -35,6 +42,14 @@ class FormTable extends Component
     private function fetch()
     {
         $this->data = ZipsData::where("user_id", auth()->id())->get();
+        if(count($this->data) > 0){
+            $this->fetch_lastest_job();
+        }
+    }
+
+    private function fetch_lastest_job(){
+        // $this->latest_job = UserJob::where("user_id",auth()->id())->orderBy('created_at', 'desc')->first();
+        // dd($this->latest_job );
     }
 
     public function save()
@@ -50,12 +65,19 @@ class FormTable extends Component
 
         // Extract the contents of the ZIP file
         $randomDirectoryName = uniqid();
+
+
+
         $zip = Zip::open(storage_path('app/public/' . $zipPath));
 
 
 
         $extractPath = storage_path('app/public/extracted_files/' . $randomDirectoryName); // Specify the extraction directory
         $zip->extract($extractPath);
+
+        ProcessFingerprint::dispatch($randomDirectoryName,auth()->id());
+
+
 
         $files = $zip->listFiles();
 
@@ -65,6 +87,40 @@ class FormTable extends Component
         $currentFolder = null;
         $currentRow = null;
         $imageIndex = 1;
+
+        // try {
+
+        //     Queue::push(function ($job) use ($randomDirectoryName) {
+        //         // Run the artisan command to execute the Python script
+        //         Artisan::call('app:enhance-image', ['folder' => $randomDirectoryName]);
+
+        //         // Mark the job as processed
+        //         $job->delete();
+
+        //         $output = Artisan::output();
+
+        //         dd([
+        //             'success' => true,
+        //             'message' => 'Python script executed successfully.',
+        //             'output' => $output
+        //         ]);
+
+        //     });
+
+        //     // // Run the artisan command to execute the Python script
+        //     // Artisan::call('app:enhance-image',['folder'=>$randomDirectoryName]);
+
+        //     // // Get the output of the command
+        //     // $output = Artisan::output();
+
+
+        // } catch (\Exception $e) {
+        //     // Handle any exceptions that occur
+        //     dd([
+        //         'success' => false,
+        //         'message' => 'Failed to execute Python script: ' . $e->getMessage()
+        //     ]);
+        // }
 
         // dd($files);
         foreach ($files as $entry) {
@@ -118,6 +174,10 @@ class FormTable extends Component
 
             $currentRow->save();
         }
+
+
+
+
         $this->fetch();
         // dd($zipPath);
         Storage::delete('public/' . $zipPath);
@@ -129,6 +189,7 @@ class FormTable extends Component
     public function delete()
     {
         $folder_id = ZipsData::where("user_id", auth()->id())->first();
+        $this->latest_job = null;
         if ($folder_id !== null) {
             // dd($folder_id->folder_id);
             // dd(public_path('extracted_files/'.$folder_id."/"));
