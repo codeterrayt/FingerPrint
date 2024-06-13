@@ -58,6 +58,7 @@ def process_file(file_path):
     img = cv2.imread(file_path, 0)
 
     # Enhance the fingerprint image
+    print(file_path)
     out = fingerprint_enhancer.enhance_Fingerprint(img)
     # out = fingerprint_enhancer.enhance_Fingerprint(out)
     # out = fingerprint_enhancer.enhance_Fingerprint(out)
