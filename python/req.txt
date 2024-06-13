@@ -1,0 +1,3 @@
+fingerprint_enhancer==0.0.13
+opencv-contrib-python==4.9.0.80
+numpy==1.26.2
