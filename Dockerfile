@@ -50,6 +50,7 @@ RUN git clone https://github.com/codeterrayt/Finterprint2.git /var/www/laravel
 
 # Set working directory to Laravel application
 WORKDIR /var/www/laravel
+# COPY . .
 
 # Install PHP dependencies using Composer
 RUN composer install
