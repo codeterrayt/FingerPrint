@@ -18,6 +18,11 @@ Route::get('/', function () {
     return redirect()->route("login");
 });
 
+Route::get('/register', function () {
+    return redirect()->route("register");
+});
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
